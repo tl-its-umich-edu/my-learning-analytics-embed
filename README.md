@@ -5,4 +5,4 @@ The script can be uploaded to either the root or sub-account level in your Canva
 
 The script will run in a given course only if the Canvas CourseID has been added in the My Learning Analytics admin interface. Currently the script adds the links (and associated icon) in the Gradebook, Assignments, and Files tools. Note that select visualizations can be disabled in the My Learning Analytics admin interface. If a visualization is disabled, its associated link in Canvas will also be disabled.
 
-Note: You will need to modify the `mylaToCloudFrontURLMap` variables to align with you host and cloudfront repository.
+Note: You will need to modify the `mylaToCloudFrontURLMap` variables to align with your host and cloudfront repository.
