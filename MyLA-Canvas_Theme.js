@@ -1,4 +1,5 @@
-// adding MyLA tool
+$( document ).ready(function() {
+	// adding MyLA tool
 	let svgE = '<svg width="35" height="35" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">' +
 		'<g>' +
 		'<title>background</title>' +
@@ -47,21 +48,21 @@
 				if (url.includes("files") && myla_feed[courseId].ra) {
 					let instructorView = $('.ef-actions').length
 					if (instructorView == 0) {
-						resourcesURL = mylaURL + courseId + "/resources/";
+						resourcesURL = mylaURL + courseId + "/resources/#launch";
 						$(svgE +
 							'<a href=' + resourcesURL + ' target="_blank" class="ef-name-col__link">' +
 							'<span class="ef-name-col__text" style="margin: 5px">Resources Accessed</span> </a>').insertAfter($('.ef-header__secondary'))
 					}
 				}
 				if (url.includes("assignments") && myla_feed[courseId].ap) {
-					assignmentURL = mylaURL + courseId + "/assignments/";
+					assignmentURL = mylaURL + courseId + "/assignments/#launch";
 					$('<div>' + svgE +
 						'<a href=' + assignmentURL + ' target="_blank" class="ef-name-col__link">' +
 						'<span style="float: left;margin: 5px">Assignment Planning</span></a></div>').insertAfter($('.header-bar-right'))
 				}
 
 				if (url.includes("grade") && myla_feed[courseId].gd) {
-					gradesURL = mylaURL + courseId + "/grades/";
+					gradesURL = mylaURL + courseId + "/grades/#launch";
 					$('<div style="float: left">' + svgE + '<a href=' + gradesURL + ' target="_blank" style="padding: 3px">Grade Distribution</span></a></div>')
 						.appendTo($("#print-grades-button-container"));
 				}
@@ -92,4 +93,4 @@
 	};
 	enableMyLATool();
 
-
+});
