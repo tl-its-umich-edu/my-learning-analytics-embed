@@ -22,75 +22,45 @@ $( document ).ready(function() {
 		'<ellipse ry="40" rx="40" id="svg_9" cy="80.5" cx="415.5" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#ffcb05"/>' +
 		'</g></svg>';
 
-
-	let getUrls = function(){
-		let hostname =window.location.hostname;
-		let mylaToCloudFrontURLMap= {
-			"test": {
-				"myla": "http://test-myla.tl.it.umich.edu/courses/",
-				"cloud_front": "https://d24wmcu6gomo52.cloudfront.net/?callback=mylaf19"
-			},
-			"prod": {
-				"myla": "http://myla.tl.it.umich.edu/courses/",
-				"cloud_front": "https://d2jiua7ndrer3o.cloudfront.net/?callback=mylaf19"
-			}
-		};
-		if(hostname.includes("test") || hostname.includes("beta")){
-			return mylaToCloudFrontURLMap["test"];
-		}
-		return mylaToCloudFrontURLMap["prod"];
-	};
-
-	let addMyLAUrl = function(myla_feed, courseId, url, mylaURL){
-		if (myla_feed[courseId] !== undefined) {
+		let addMyLAUrl = function (toolId) {
 			roles = ENV.current_user_roles;
 			if (roles.length == 2 && roles.includes("user") && roles.includes("student")) {
-				if (url.includes("files") && myla_feed[courseId].ra) {
-					let instructorView = $('.ef-actions').length
-					if (instructorView == 0) {
-						resourcesURL = mylaURL + courseId + "/resources/#launch";
+				url = window.location.href
+				if (url.includes("files") || url.includes("assignments") || url.includes("grade")) {
+					courseId = url.split('/')[4]
+					ltiURL = `/courses/${courseId}/external_tools/${toolId}`
+					if (url.includes("files")) {
 						$(svgE +
-							'<a href=' + resourcesURL + ' target="_blank" class="ef-name-col__link">' +
+							'<a href=' + ltiURL + ' class="ef-name-col__link">' +
 							'<span class="ef-name-col__text" style="margin: 5px">Resources Accessed</span> </a>').insertAfter($('.ef-header__secondary'))
 					}
+					else if (url.includes("assignments")) {
+						$('<div>' + svgE +
+							'<a href=' + ltiURL + ' class="ef-name-col__link">' +
+							'<span style="float: left;margin: 5px">Assignment Planning</span></a></div>').insertAfter($('.header-bar-right'))
+					}
+	
+					else if (url.includes("grade")) {
+						$('<div style="float: left">' + svgE + '<a href=' + ltiURL + ' style="padding: 3px">Grade Distribution</span></a></div>')
+							.appendTo($("#print-grades-button-container"));
+					}
 				}
-				if (url.includes("assignments") && myla_feed[courseId].ap) {
-					assignmentURL = mylaURL + courseId + "/assignments/#launch";
-					$('<div>' + svgE +
-						'<a href=' + assignmentURL + ' target="_blank" class="ef-name-col__link">' +
-						'<span style="float: left;margin: 5px">Assignment Planning</span></a></div>').insertAfter($('.header-bar-right'))
-				}
+		}
+	
+		};
 
-				if (url.includes("grade") && myla_feed[courseId].gd) {
-					gradesURL = mylaURL + courseId + "/grades/#launch";
-					$('<div style="float: left">' + svgE + '<a href=' + gradesURL + ' target="_blank" style="padding: 3px">Grade Distribution</span></a></div>')
-						.appendTo($("#print-grades-button-container"));
-				}
+		let enableMyLATool = function () {
+			let hostname = window.location.hostname;
+			if (hostname.includes("test")) {
+				// replace it with your LTI toolid in canvas test
+				mylaToolId = 'test_tool_id'
+			} else {
+				// Prod LTI tool ID
+				mylaToolId = 'prod_tool_id'
 			}
-		}
-
-	};
-
-	let enableMyLATool = function() {
-		url = window.location.href
-		if (url.includes("files") || url.includes("assignments") || url.includes("grade")) {
-			courseId = url.split('/')[4];
-			link = getUrls();
-			$.ajax({
-				url: link.cloud_front,
-				dataType: 'jsonp',  //use jsonp data type in order to perform cross domain ajax
-				cache: true,
-				jsonp: false,
-				jsonpCallback: "mylaf19",
-				crossDomain: true,
-				timeout: 3000, // setting timeout for 3 sec
-				success: function (response) {
-					addMyLAUrl(response, courseId, url, link.myla)
-				}, error: function (x, t, m) {
-				}
-			});
-		}
-	};
-	enableMyLATool();
+			addMyLAUrl(mylaToolId)
+	
+			}
+		enableMyLATool();
 
 });
