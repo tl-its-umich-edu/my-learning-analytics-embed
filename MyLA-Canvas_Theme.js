@@ -99,7 +99,7 @@ $( document ).ready(function() {
 		if (hostname.includes("test")) {
 			mylaToolId = 'Test_myla_tool_id'
 		} else {
-			mylaToolId = 'Prod_myla_tool_is'
+			mylaToolId = 'Prod_myla_tool_id'
 		}
 		if (url.includes("files") || url.includes("assignments") || url.includes("grade")) {
 			courseId = url.split('/')[4]
